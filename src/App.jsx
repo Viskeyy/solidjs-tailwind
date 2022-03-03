@@ -2,10 +2,25 @@ import { createEffect } from 'solid-js';
 import { gsap } from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 
+import CursorChat from 'solid-cursor-chat';
+
+import { nanoid } from 'nanoid';
+
+// let channelId = nanoid(6);
+// url.hash = channelId;
+
+const url = new URL('http://localhost:8888');
+
+const channelId = location.hash ? location.hash : nanoid(6);
+
+url.hash = channelId;
+
+const shareLink = url.href;
+
 function App() {
     gsap.registerPlugin(ScrollTrigger);
     createEffect(() => {
-        console.clear();
+        // console.clear();
 
         const svg = document.querySelector('#svg');
         const img = document.querySelector('#img');
@@ -14,10 +29,11 @@ function App() {
         const border = document.querySelector('#border');
         const pad = 4;
 
-        console.log('svg', svg);
-        console.log('img', img);
-        console.log('circle', circle);
-        console.log('content', content);
+        // console.log(shareLink);
+        // console.log('svg', svg);
+        // console.log('img', img);
+        // console.log('circle', circle);
+        // console.log('content', content);
 
         let radius = +circle.getAttribute('r');
         let imgWidth, imgHeight;
@@ -109,9 +125,24 @@ function App() {
             ScrollTrigger.refresh();
         }
     });
-
+    async function copyChannelLink(shareLink) {
+        try {
+            await navigator.clipboard.writeText(shareLink);
+            console.log('copied', shareLink);
+            alert(`copied ${shareLink}`);
+        } catch (e) {
+            console.log('failed', e);
+        }
+    }
     return (
         <>
+            <CursorChat
+                showLatency
+                presenceURL="wss://prsc.yomo.dev"
+                presenceAuthEndpoint="/.netlify/functions/presence-auth"
+                avatar="https://cursor-chat-example.vercel.app/_next/image?url=%2Flogo.png&w=256&q=75"
+                room={`${channelId}`}
+            />
             <div class="min-h-screen bg-black flex flex-col justify-center relative overflow-hidden sm:py-12">
                 <div class="container mx-auto w-700 mt-294 text-center">
                     <a class="text-white text-8xl">
@@ -148,10 +179,15 @@ function App() {
                             appear here
                         </div>
                         <div className="text-white mt-8 inline-block border p-1 rounded-md bg-gray-900">
-                            https://presence.run/#cool{' '}
-                            <span className="border rounded-md px-2 py-1">
+                            {shareLink}{' '}
+                            <button
+                                onClick={(e) => {
+                                    copyChannelLink(shareLink);
+                                }}
+                                className="border rounded-md px-2 py-1"
+                            >
                                 Copy
-                            </span>
+                            </button>
                         </div>
                     </div>
                     <svg id="svg" className="rounded-3xl">
