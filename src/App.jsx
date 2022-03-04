@@ -17,7 +17,8 @@ url.hash = channelId;
 
 const shareLink = url.href;
 
-window.location.replace(url.href);
+// window.location.replace(url.href);
+window.location.href = url.href;
 
 function App() {
     gsap.registerPlugin(ScrollTrigger);
