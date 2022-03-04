@@ -9,7 +9,7 @@ import { nanoid } from 'nanoid';
 // let channelId = nanoid(6);
 // url.hash = channelId;
 
-const url = new URL('http://localhost:8888');
+const url = new URL('https://festive-mahavira-7bdd92.netlify.app/');
 
 const channelId = location.hash ? location.hash : nanoid(6);
 
